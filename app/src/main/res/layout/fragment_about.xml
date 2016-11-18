@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="apperclass.casillas.About">
+
+
+    <TextView
+        android:text="Casillas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"
+        android:textSize="90sp" />
+
+    <TextView
+        android:text="Autor"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"
+        android:textSize="30sp" />
+
+    <TextView
+        android:text="Chen Chao"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="24sp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="Curso"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"
+        android:textSize="30sp" />
+
+    <TextView
+        android:text="2º DAM"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="24sp"
+        android:textAlignment="center" />
+</LinearLayout>

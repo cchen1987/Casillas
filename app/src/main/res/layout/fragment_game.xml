@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="apperclass.casillas.Game">
+
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Chronometer
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/chronometer" />
+
+        <TextView
+            android:text="Pulsaciones: 0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.7"
+            android:id="@+id/tvclicks" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/gamelayout">
+
+    </LinearLayout>
+</LinearLayout>

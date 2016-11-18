@@ -1,0 +1,61 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Game settings">
+
+        <ListPreference
+            android:key="game_columns"
+            android:title="Número de columnas"
+            android:entries="@array/entries_game_columns_preference"
+            android:entryValues="@array/entries_game_columns_preference"
+            android:defaultValue="3"
+            android:dialogTitle="Número de columnas"
+            android:summary="3"/>
+
+        <ListPreference
+            android:key="game_rows"
+            android:title="Número de filas"
+            android:entries="@array/entries_game_rows_preference"
+            android:entryValues="@array/entries_game_rows_preference"
+            android:defaultValue="3"
+            android:dialogTitle="Número de filas"/>
+
+        <ListPreference
+            android:key="game_options"
+            android:title="Número de opciones"
+            android:entries="@array/entries_game_options_preference"
+            android:entryValues="@array/entries_game_options_preference"
+            android:defaultValue="2"
+            android:dialogTitle="Número de opciones"/>
+
+        <ListPreference
+            android:key="game_mode"
+            android:title="Visualización"
+            android:entries="@array/entries_game_mode_preference"
+            android:entryValues="@array/entries_game_mode_preference"
+            android:defaultValue="Números"
+            android:dialogTitle="Visualización"/>
+
+        <ListPreference
+            android:key="game_music"
+            android:title="Música"
+            android:entries="@array/entries_game_music_preference"
+            android:entryValues="@array/entries_game_music_preference"
+            android:defaultValue="Chelsea Dagger"
+            android:dialogTitle="Música"/>
+
+        <CheckBoxPreference
+            android:key="game_vibration"
+            android:title="Vibración"
+            android:defaultValue="true"
+            android:summary="Activar o desactivar vibración" />
+
+        <CheckBoxPreference
+            android:key="game_sound"
+            android:title="Sonido"
+            android:defaultValue="true"
+            android:summary="Activar o deactivar sonido" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

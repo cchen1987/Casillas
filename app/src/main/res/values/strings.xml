@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Casillas</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_game">GameActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="help_p1">&#032;&#032;&#032;&#032;El juego consiste en tocar los botones hasta conseguir que todos los botones de la pantalla sean iguales.</string>
+    <string name="help_p2">&#032;&#032;&#032;&#032;Cada pulsación de botón sumará en 1 el número actual del botón (opción Números activado) o cambiará de color (opción Colores activado).</string>
+    <string name="help">
+        <![CDATA[
+        <html>
+         <head></head>
+         <body style="text-align:justify;color:gray;background-color:#fbfbfb;font-size:20px;">
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;El juego consiste en tocar los botones hasta conseguir que todos los botones de la pantalla sean iguales.</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;Cada pulsación de botón sumará en 1 el número actual del botón (opción Números activado) o cambiará de color (opción Colores activado).</p>
+         </body>
+        </html>
+        ]]>
+</string>
+
+</resources>

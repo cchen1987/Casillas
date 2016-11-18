@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="entries_game_columns_preference">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="entries_game_rows_preference">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="entries_game_options_preference">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="entries_game_mode_preference">
+        <item>Colores</item>
+        <item>Números</item>
+    </string-array>
+
+    <string-array name="entries_game_music_preference">
+        <item>Chelsea Dagger</item>
+        <item>Hey Oh</item>
+        <item>Prayer Of The Refugee</item>
+    </string-array>
+
+</resources>
