@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="apperclass.casillas.Help" >
+
+    <TextView
+        android:text="Ayuda"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/textView2"
+        android:textAlignment="center"
+        android:textSize="90sp"
+        android:textAllCaps="false"
+        android:layout_weight="2.4" />
+
+    <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:id="@+id/web"/>
+
+    <TextView
+        android:text="¡Diviértete!"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/textView9"
+        android:layout_weight="0.8"
+        android:textAlignment="center"
+        android:textSize="36sp" />
+</LinearLayout>
