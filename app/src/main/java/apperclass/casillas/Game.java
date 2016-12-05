@@ -1,17 +1,28 @@
 package apperclass.casillas;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -20,6 +31,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -34,13 +46,20 @@ public class Game extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     LinearLayout layoutContainer;
+    LinearLayout[] layoutRows;
     TextView clicks;
+    Button[][] buttons;
+    MenuActivity menuActivity;
+    Chronometer chronometer;
+    SoundPool media;
+    Vibrator vibrator;
+    Location location;
+    LocationListener locationListener;
+    LocationManager locationManager;
 
-    int column, row, frame, valueToCheck;
+    int column, row, frame, valueToCheck, score;
     String option;
     boolean sound, vibration;
-    LinearLayout[] layoutRows;
-    Button[][] buttons;
     int[] colors = new int[] {
             R.drawable.ic_1c,
             R.drawable.ic_2c,
@@ -60,14 +79,11 @@ public class Game extends Fragment {
     };
     int[] currentValues;
     int[][] index, currentGameStatus;
-    Vibrator vibrator;
     int numberOfClicks;
     final long miliseconds = 50;
-    SoundPool media;
     int buttonSound;
-    Chronometer chronometer;
     long timeWhenStopped;
-    MenuActivity menuActivity;
+    WebService webService;
 
     public Game() {
     }
@@ -100,6 +116,42 @@ public class Game extends Fragment {
         clicks = (TextView) view.findViewById(R.id.tvclicks);
         layoutContainer = (LinearLayout) view.findViewById(R.id.gamelayout);
         chronometer = (Chronometer) view.findViewById(R.id.chronometer);
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            else {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+        }
+        else {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location loc) {
+                location = loc;
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+            @Override
+            public void onProviderEnabled(String provider) { }
+
+            @Override
+            public void onProviderDisabled(String provider) { }
+        };
+
+        if (location != null)
+            Log.i("localizacion: ", (location.getLatitude() + " " + location.getLongitude()));
+        else
+            Toast.makeText(menuActivity, "localizacion nula", Toast.LENGTH_SHORT).show();
 
         generateButtons();
         return view;
@@ -320,6 +372,8 @@ public class Game extends Fragment {
                 }
             }
         }
+        webService = new WebService();
+
         return true;
     }
 
@@ -392,6 +446,14 @@ public class Game extends Fragment {
                         }
                         if (checkForWin()) {
                             chronometer.stop();
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                            String user = preferences.getString("user", "");
+                            calculateScore();
+                            webService = new WebService();
+                            if (location != null)
+                                webService.execute("2", user, "" + score, "" + location.getLatitude(), "" + location.getLongitude());
+                            else
+                                webService.execute("2", user, "" + score, "0", "0");
                             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -417,9 +479,26 @@ public class Game extends Fragment {
         this.menuActivity = menuActivity;
     }
 
+    private void calculateScore() {
+        score = ((column + row) * 15 + frame * 30 + numberOfClicks * 35 -
+                (int)((SystemClock.elapsedRealtime() - chronometer.getBase()) / 1000) * 10);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            else {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30, 0, locationListener);
+            }
+        }
+        else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30, 0, locationListener);
+        }
         chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         chronometer.start();
         if (currentGameStatus != null) {
@@ -430,6 +509,18 @@ public class Game extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            else {
+                locationManager.removeUpdates(locationListener);
+            }
+        }
+        else {
+            locationManager.removeUpdates(locationListener);
+        }
         timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
         chronometer.stop();
         currentGameStatus = index;

@@ -108,7 +108,7 @@ public class ShakeEventManager implements SensorEventListener {
     }
 
 
-    public static interface ShakeListener {
-        public void onShake();
+    public interface ShakeListener {
+        void onShake();
     }
 }

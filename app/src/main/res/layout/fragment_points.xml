@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="apperclass.casillas.Points">
+
+
+    <TextView
+        android:text="Puntuaciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"
+        android:textSize="30sp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lvpuntuaciones"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false" />
+</LinearLayout>

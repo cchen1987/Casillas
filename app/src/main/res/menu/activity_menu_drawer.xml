@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_play"
+        <item android:id="@+id/nav_play"
             android:icon="@android:drawable/ic_media_play"
             android:title="Jugar" />
-        <item
-            android:id="@+id/nav_preferences"
+        <item android:id="@+id/nav_points"
+            android:title="Puntuaciones"/>
+        <item android:id="@+id/nav_preferences"
             android:icon="@android:drawable/ic_menu_manage"
             android:title="Preferencias" />
         <item android:title="Sobre Mi"

@@ -1,36 +1,62 @@
 package apperclass.casillas;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         Game.OnFragmentInteractionListener, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener,
         SensorEventListener, ShakeEventManager.ShakeListener, About.OnFragmentInteractionListener,
-        Help.OnFragmentInteractionListener {
+        Help.OnFragmentInteractionListener, Points.OnFragmentInteractionListener {
     MediaPlayer mediaPlayer;
     Toolbar toolbar;
     Menu myMenu;
     LinearLayout body;
     boolean soundOn;
+    Points points;
+    LocationManager locationManager;
 
     ShakeEventManager shakeEventManager;
 
@@ -41,6 +67,22 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Casillas");
         setSupportActionBar(toolbar);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this).setMessage("El GPS está desactivado, ¿Activarlo?").
+                    setCancelable(false).
+                    setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    });
+            alert.show();
+        }
 
         mediaPlayer = new MediaPlayer();
         body = (LinearLayout) findViewById(R.id.content_menu);
@@ -57,6 +99,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         shakeEventManager = new ShakeEventManager();
         shakeEventManager.setListener(this);
         shakeEventManager.init(this);
+
     }
 
     // This method updates preference settings
@@ -101,6 +144,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             Preference preference;
             SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
 
+            preference = findPreference("user");
+            preference.setSummary(sharedPreferences.getString("user", ""));
+
             preference = findPreference("game_columns");
             preference.setSummary(sharedPreferences.getString("game_columns", "3"));
 
@@ -133,6 +179,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
             Preference preference = findPreference(s);
             switch (preference.getKey()) {
+                case "user":
+                    preference.setSummary(sharedPreferences.getString("user", ""));
+                    break;
                 case "game_columns":
                     preference.setSummary(sharedPreferences.getString("game_columns", "3"));
                     break;
@@ -212,6 +261,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         body.setBackgroundResource(0);
+        if (points != null)
+            points.interruptThread();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         soundOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("game_sound", true);
@@ -230,6 +281,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             Game game = new Game();
             game.setMenuActivity(this);
             getFragmentManager().beginTransaction().replace(R.id.body, game).commit();
+        }
+        else if (id == R.id.nav_points) {
+            points = new Points();
+            getFragmentManager().beginTransaction().replace(R.id.body, points).commit();
         }
         else if (id == R.id.nav_preferences) {
             getFragmentManager().beginTransaction().replace(R.id.body, new Preferences()).commit();
